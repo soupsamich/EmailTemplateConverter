@@ -26,7 +26,7 @@ c:\python38\python3.exe -m pip3 install beautifulsoup4
 sudo pip3 install beautifulsoup4
 ```
 
-## Usage
+## Usage:
 
 Short Form    | Long Form           | Description
 ------------- | ------------------- |-------------
@@ -42,12 +42,12 @@ Short Form    | Long Form           | Description
 
 * Supply a directory and convert the images to base64 for all html files within that directory, then output each file as a new file in the specified output directory:
 
-``python3 htmlImageConverter.py -i "/home/user/OriginalFiles" -o "/home/user/ConvertedFiles"``
+```python3 htmlImageConverter.py -i "/home/user/OriginalFiles" -o "/home/user/ConvertedFiles"```
 
 
-## License
+## License:
 
 This project is licensed under the GPL-3.0 License - see the LICENSE.md file for details
 
-## Version
+## Version:
 **Current version is 1.0**
