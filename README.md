@@ -1,4 +1,4 @@
-### Full example:
+### Walkthrough example:
 - Download the script files and template file listed in this github repo.
 - Download email templates you'd like to convert and place them into a directory together
 ```example: /home/user/OriginalFiles/email.html```
