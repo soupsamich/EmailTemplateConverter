@@ -13,8 +13,8 @@
 - Open all of the .json files and fill in the "scenario" value, along with the "attachments" value if necessary. Also, double check that the other values were filled in as expected
 
 
-:-
-:-
+<br>
+<br>
 
 # htmlImageConverter
 
