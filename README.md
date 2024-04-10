@@ -12,7 +12,6 @@
 ```example: python3 createJsonFilesFromTemplate.py -f '/home/user/LegitTemplate.json' -i '/home/user/ConvertedFiles'```
 - Open all of the .json files and fill in the "scenario" value, along with the "attachments" value if necessary. Also, double check that the other values were filled in as expected
 
-
 <br>
 <br>
 
@@ -63,9 +62,8 @@ Short Form    | Long Form           | Description
 
 ```python3 htmlImageConverter.py -i "/home/user/OriginalFiles" -o "/home/user/ConvertedFiles"```
 
-
-
-
+<br>
+<br>
 
 # createJsonFilesFromTemplate.py
 
