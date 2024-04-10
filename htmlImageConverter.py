@@ -3,6 +3,7 @@ import base64
 import requests
 import argparse
 from bs4 import BeautifulSoup
+import re
 
 # Create arguments
 parser = argparse.ArgumentParser(
@@ -10,6 +11,7 @@ parser = argparse.ArgumentParser(
     epilog='Example: python3 htmlImageConverter.py -i "/home/user/Desktop/Original" -o "/home/user/Desktop/Converted"')
 parser.add_argument('-i', '--input', required=True, help='The directory or html file path location. If a directory, then all html files in that location will be converted. If a file path, then just that file will be converted.')
 parser.add_argument('-o', '--output-directory', required=True, help='Directory output location where the converted file(s) will be created.')
+parser.add_argument('-n', '--keep-default-names', help='Prevent the changing of default names to variables')
 args = parser.parse_args()
 
 # Create colored output variables
@@ -34,7 +36,7 @@ def fetch_image_base64(url):
         print(f"{RED}-----------Error fetching image from {url}: {e}{RESET}")
         return 'ExceptionError' # removes the broken image link and replaces with a string
 
-# A function that takes in and reads an html file and use the previously created fetch_image_base64 function to convert all image links within the file to base64 encoded images
+# A function that takes in and reads an html file, then uses the fetch_image_base64 function to convert all image links within the file to base64 encoded images, then replaces the links with the encoded data, lastly writes it all as a new html file
 def convert_image_links_to_base64(html_file_path, output_file_path):
     with open(html_file_path, 'r') as html_file:
         soup = BeautifulSoup(html_file, 'html.parser')
@@ -45,11 +47,20 @@ def convert_image_links_to_base64(html_file_path, output_file_path):
                 img_base64 = fetch_image_base64(img_src)
                 if img_base64:
                     img_tag['src'] = img_base64
+        if not args.keep_default_names: # If the -n tag is not  used, then change all Smiles Davis to firstname and lastname variables, and all hello@smilesdavis.yeah to email variable
+            default_names = soup.find_all(string = re.compile('Smiles Davis'))
+            for default_name in default_names:
+                changed_name = default_name.replace('Smiles Davis', '[[firstName]] [[lastName]]')
+                default_name.replace_with(changed_name)
+            default_emails = soup.find_all(string = re.compile('hello@SmilesDavis.yeah'))
+            for default_email in default_emails:
+                changed_email = default_email.replace('hello@SmilesDavis.yeah', '[[email]]')
+                default_email.replace_with(changed_email)
 
     with open(output_file_path, 'w') as output_file:
         output_file.write(str(soup))
 
-# A function that takes in a directory or file, uses the previously created functions to convert the images within the html file, then outputs the file into the output directory
+# A function that takes in a directory or file, uses the convert_image_links_to_base64 function to convert the images within the html file, then outputs the file into the output directory
 def process_html_files(input_path, output_directory):
     if os.path.isdir(input_path): # if the input is a directory, iterate through all html files within that directory
         for filename in os.listdir(input_path):
@@ -63,9 +74,9 @@ def process_html_files(input_path, output_directory):
         convert_image_links_to_base64(input_path, output_html_file)
         print(f"Modified HTML written to {BLUE}{output_html_file}{RESET}")
     else:
-        print(F"{RED}Invalid input or output. Please provide a valid directory or a single HTML file.{RESET}")
+        print(f"{RED}Invalid input or output. Please provide a valid directory or a single HTML file.{RESET}")
 
-# The top level function to run the code with the user supplied arguments
+# The top level function to execute the process_html_files function with the user supplied arguments
 def main():
     if os.path.isdir(args.output_directory):
         print(f"Starting conversion of html files in {YELLOW}{args.input}{RESET}")
