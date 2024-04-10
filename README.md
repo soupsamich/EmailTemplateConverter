@@ -60,7 +60,7 @@ Short Form    | Long Form           | Description
 ```python3 htmlImageConverter.py -i "/home/user/OriginalFiles" -o "/home/user/ConvertedFiles"```
 
 
-# createJsonFilesFromTemplate.py
+## createJsonFilesFromTemplate.py
 
 Use to create json file pairings for converted html files
 
