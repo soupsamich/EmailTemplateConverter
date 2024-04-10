@@ -12,6 +12,9 @@
 ```example: python3 createJsonFilesFromTemplate.py -f '/home/user/LegitTemplate.json' -i '/home/user/ConvertedFiles'```
 - Open all of the .json files and fill in the "scenario" value, along with the "attachments" value if necessary. Also, double check that the other values were filled in as expected
 
+
+
+
 # htmlImageConverter
 
 Use to convert all image links in an html file to base64 encoded data that can be viewed offline
@@ -58,6 +61,9 @@ Short Form    | Long Form           | Description
 * Supply a directory and convert the images to base64 for all html files within that directory, then output each file as a new file in the specified output directory:
 
 ```python3 htmlImageConverter.py -i "/home/user/OriginalFiles" -o "/home/user/ConvertedFiles"```
+
+
+
 
 
 # createJsonFilesFromTemplate.py
