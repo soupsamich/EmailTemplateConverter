@@ -1,0 +1,19 @@
+{
+	"application": {
+		"app_level_key": "app_level_value"
+	},
+	"email": {
+		"scenario": "Enter Scenario",
+		"sender_display_name": "Enter Sender",
+		"sender_address": "Enter Address",
+		"subject": "Enter Subject",
+		"attachments": "",
+		"is_legit": true
+	},
+	"phishing_attributes": {
+		"sender": false,
+		"content": false,
+		"links": false,
+		"link_display_url": ""
+	}
+}
