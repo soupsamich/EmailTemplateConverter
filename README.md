@@ -14,6 +14,7 @@
 
 <br>
 <br>
+<br>
 
 # htmlImageConverter
 
@@ -64,6 +65,7 @@ Short Form    | Long Form           | Description
 
 <br>
 <br>
+<br>
 
 # createJsonFilesFromTemplate.py
 
@@ -88,11 +90,14 @@ Short Form    | Long Form           | Description
 
 ```python3 createJsonFilesFromTemplate.py -f "/home/user/Desktop/LegitTemplate.json" -i "/home/user/Desktop/Converted/HTMLFiles/"```
 
+<br>
+<br>
 
 # License:
 
 This project is licensed under the GPL-3.0 License - see the LICENSE.md file for details
 
+<br>
 
 ## References:
 
