@@ -51,3 +51,9 @@ This project is licensed under the GPL-3.0 License - see the LICENSE.md file for
 
 ## Version:
 **Current version is 1.0**
+
+## References:
+Help building regex:
+* https://regex-generator.olafneumann.org/
+* https://regex101.com/
+
