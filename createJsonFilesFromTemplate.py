@@ -9,7 +9,6 @@ parser = argparse.ArgumentParser(
     epilog='Example: python3 createJsonFilesFromTemplate.py -f "/home/user/Desktop/LegitTemplate.json" -i "/home/user/Desktop/HTMLFiles/"')
 parser.add_argument('-f', '--file-template', required=True, help='The json template file to use')
 parser.add_argument('-i', '--input', required=True, help='Directory containing all of the html files you want json files created for')
-parser.add_argument('-p', '--phishing', choices=['s,c,l,a'], nargs='+', help='Creat json files for phishing instead of legit by supplying argument options of s, c, l, and/or a (sender, content, links, and/or attachments, respectfully)')
 args = parser.parse_args()
 
 # Create colored output variables
@@ -27,35 +26,25 @@ def replace_words(data, file_name):
         phishing_type = match.group(1)
         email_sender = match.group(2)
         email_address = f'{email_sender}@mail.{email_sender}.com'.lower()
-        email_subject = match.group(3)
-        email_attachments = '"attachments": = ""'
-        if isinstance(data, dict): # Search recursively through dictionaries
-            for key, value in data.items():
-                if 'P' in phishing_type:
-                    if key == 'is_legit' and isinstance(value,bool):
-                        data[key] = not value
-                    elif 'S' in phishing_type and key == 'sender' and isinstance(value,bool):
-                        data[key] = not value
-                    elif 'C' in phishing_type and key == 'content' and isinstance(value,bool):
-                        data[key] = not value
-                    elif 'L' in phishing_type and key == 'links' and isinstance(value,bool):
-                        data[key] = not value
-                    elif 'A' in phishing_type and key == 'attachments' and isinstance(value,bool):
-                        data[key] = not value
-                    else:
-                        data[key] = replace_words(value, file_name)
-            return data
-        elif isinstance(data, list): # Search recursively through lists
-            return [replace_words(element, file_name) for element in data]
-        elif isinstance(data, str):
-            if 'S' in phishing_type:
-                email_sender = f'FAKE{email_sender}'
-                email_address = f'FAKE{email_sender}@hotmail.com'
-            elif 'A' in phishing_type:
-                email_attachments = '"attachments": = ["FAKEATTACHMENT.EXE"]'
-            return data.replace('Enter Sender', email_sender).replace('Enter Address', email_address).replace('Enter Subject', email_subject).replace('"attachments": = ""', email_attachments)
-        else:
-            return data
+        data['email']['sender_display_name'] = email_sender
+        data['email']['sender_address'] = email_address
+        data['email']['subject'] = match.group(3)
+        if "P" in phishing_type:
+            data['email']['attachments'] = []
+            data['email']['is_legit'] = False
+            if "S" in phishing_type:
+                data['email']['sender_display_name'] = f'FAKE{email_sender}'
+                data['email']['sender_address'] = f'FAKE{email_sender}@hotmail.com'
+                data['phishing_attributes']['sender'] = True
+            if "C" in phishing_type:
+                data['phishing_attributes']['content'] = True
+            if "L" in phishing_type:                
+                data['phishing_attributes']['links'] = True
+                data['phishing_attributes']['link_display_url'] = f'MALICIOUSWEBSITE.COM/VICTIM'
+            if "A" in phishing_type:
+                data['phishing_attributes']['attachments'] = ["FAKEATTACHMENT.EXE"]
+                data['phishing_attributes']['attachments'] = True
+    return data
 
 # Function to iterate through html files and create a pairing json file with the same name
 def create_json_files(input_path):
@@ -63,7 +52,6 @@ def create_json_files(input_path):
         if filename.endswith('.html'):
             json_filename = f"{os.path.splitext(filename)[0]}.json" # Create a json file with the same name as the html file
             input_json_file = os.path.join(input_path, json_filename)
-            # Load the JSON template file
             with open(args.file_template, 'r') as file:
                 json_data = json.load(file)
             new_json_data = replace_words(json_data, filename) # Replace 'Enter Sender' with 'Sender from filename.html' and 'Enter Subject' with 'Subject from filename.html'
@@ -75,7 +63,7 @@ def main():
     try:
         create_json_files(args.input)
         print(f"{GREEN}Finished creating json files!{RESET}")
-        print(f"{YELLOW}Remember to modify each json file with the correct scenario, sender, sender address, subject, and any attachments!{RESET}")
+        print(f"{YELLOW}REMEMBER TO CHECK AND MODIFY EACH JSON FILE WITH THE CORRECT VALUES! For instance: if you have links as true phishing then make sure to change the link_display_url, if you have sender as true phishing make sure to change the sender_display_name and sender_address etc.!{RESET}")
     except Exception as error:
         print(f"{RED}An exception offcured:{RESET}, {error}{RESET}")
 
