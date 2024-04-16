@@ -14,6 +14,7 @@
 		"sender": false,
 		"content": false,
 		"links": false,
-		"link_display_url": ""
+		"link_display_url": "",
+		"attachments": false
 	}
 }
