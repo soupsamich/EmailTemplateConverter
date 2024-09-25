@@ -8,7 +8,7 @@ import re
 # Check the characters placed in the --phishing argument to make sure they are valid
 def check_phishing_chars(phishingargs_value):
     phishingargs_value = phishingargs_value.lower()
-    valid_chars = "scla"
+    valid_chars = "sclaq"
     if not all(char in valid_chars for char in phishingargs_value):
         raise argparse.ArgumentTypeError(f"Invalid characters in the -p/--phishing argument. Use only '{valid_chars}'.")
     return phishingargs_value
@@ -32,7 +32,7 @@ RESET = '\033[0m'
 
 # Create the [PSCLA] name prefix depending on what arguments are supplied to the -p parameter, and always order them correctly regardless of how they are supplied
 def generate_prefix(characters):
-    ordered_chars = ''.join(sorted(characters, key=lambda c: 'scla'.index(c.lower())))
+    ordered_chars = ''.join(sorted(characters, key=lambda c: 'sclaq'.index(c.lower())))
     return f"[P{ordered_chars}]".upper()
 
 # A function that takes an image link, converts the image data to base64, then returns it in a way that html can render it as an image offline
@@ -51,6 +51,7 @@ def fetch_image_base64(url):
         return 'ExceptionError' # removes the broken image link and replaces with a string
 
 # A function that takes in and reads an html file, then uses the fetch_image_base64 function to convert all image links within the file to base64 encoded images, then replaces the links with the encoded data, lastly writes it all as a new html file
+# Also removes all href links and replaces with javvascript:void(0)
 def convert_image_links_to_base64(html_file_path, output_file_path):
     with open(html_file_path, 'r') as html_file:
         soup = BeautifulSoup(html_file, 'html.parser')
@@ -61,6 +62,9 @@ def convert_image_links_to_base64(html_file_path, output_file_path):
                 img_base64 = fetch_image_base64(img_src)
                 if img_base64:
                     img_tag['src'] = img_base64
+        links = soup.find_all('a')
+        for original_link in links:
+            original_link['href'] = 'javascript:void(0)'
         if not args.keep_default_names: # If the -n tag is not  used, then change all Smiles Davis to firstname and lastname variables, and all hello@smilesdavis.yeah to email variable
             default_names = soup.find_all(string = re.compile('Smiles Davis'))
             for default_name in default_names:
@@ -91,7 +95,7 @@ def process_html_files(input_path, output_directory):
                     match = re.search(pattern, filename)
                     if match:
                         original_prefix = match.group(1)
-                        filename_noprefix = f"{match.group(2)}{match.group(3)}"
+                        filename_noprefix = f"{match.group(2)} {match.group(3)}"
                         # the user can supply multiple -p arguments, this will iterate through them and create an html file for each
                         for phish_choice in args.phishing:
                             name_prefix = generate_prefix(phish_choice)
@@ -102,7 +106,7 @@ def process_html_files(input_path, output_directory):
                                 convert_image_links_to_base64(input_html_file, output_html_file)
                                 print(f"Modified HTML written to {BLUE}{output_html_file}{RESET}")
                             else:
-                                print(f"Skipping creation of file using args flag {phish_choice} because it's the same as the original and that has been converted already by default.")
+                                print(f"Skipping creation of file using args flag {phish_choice} because it's the same as the original conversion which was done already by default.")
     # if the input is a file, just convert that single file then output into the output directory     
     elif os.path.isfile(input_path) and input_path.endswith(".html"):
         output_html_file = os.path.join(output_directory, os.path.basename(input_path))
