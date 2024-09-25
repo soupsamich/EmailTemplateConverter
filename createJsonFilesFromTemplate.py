@@ -27,23 +27,28 @@ def replace_words(data, file_name):
         email_sender = match.group(2)
         email_address = f'{email_sender}@mail.{email_sender}.com'.lower()
         data['email']['sender_display_name'] = email_sender
+        print(email_sender)
         data['email']['sender_address'] = email_address
         data['email']['subject'] = match.group(3)
         if "P" in phishing_type:
-            data['email']['attachments'] = []
             data['email']['is_legit'] = False
+            #print(match.group(2))
             if "S" in phishing_type:
                 data['email']['sender_display_name'] = f'FAKE{email_sender}'
+                print(match.group(2))
                 data['email']['sender_address'] = f'FAKE{email_sender}@hotmail.com'
                 data['phishing_attributes']['sender'] = True
             if "C" in phishing_type:
                 data['phishing_attributes']['content'] = True
-            if "L" in phishing_type:                
+            if "L" in phishing_type:
                 data['phishing_attributes']['links'] = True
                 data['phishing_attributes']['link_display_url'] = f'MALICIOUSWEBSITE.COM/VICTIM'
             if "A" in phishing_type:
-                data['phishing_attributes']['attachments'] = ["FAKEATTACHMENT.EXE"]
+                data['email']['attachments'] = ["FAKEATTACHMENT.EXE"]
                 data['phishing_attributes']['attachments'] = True
+            if "Q" in phishing_type:
+                data['phishing_attributes']['qrcode'] = True
+                data['phishing_attributes']['qrcode_display_url'] = "MALICIOUSWEBSITE.COM"
     return data
 
 # Function to iterate through html files and create a pairing json file with the same name
