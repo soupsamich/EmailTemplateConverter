@@ -7,8 +7,9 @@
 		"sender_display_name": "Enter Sender",
 		"sender_address": "Enter Address",
 		"subject": "Enter Subject",
-		"attachments": "",
-		"is_legit": true
+		"attachments": [],
+		"is_legit": true,
+		"categories": ["Other"]
 	},
 	"phishing_attributes": {
 		"sender": false,
