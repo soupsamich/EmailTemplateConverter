@@ -9,6 +9,7 @@ parser = argparse.ArgumentParser(
     epilog='Example: python3 createJsonFilesFromTemplate.py -f "/home/user/Desktop/LegitTemplate.json" -i "/home/user/Desktop/HTMLFiles/"')
 parser.add_argument('-f', '--file-template', required=True, help='The json template file to use')
 parser.add_argument('-i', '--input', required=True, help='Directory containing all of the html files you want json files created for')
+parser.add_argument('-c', '--category', help='The category this email belongs to, defaults to other if not added')
 args = parser.parse_args()
 
 # Create colored output variables
@@ -49,6 +50,9 @@ def replace_words(data, file_name):
             if "Q" in phishing_type:
                 data['phishing_attributes']['qrcode'] = True
                 data['phishing_attributes']['qrcode_display_url'] = "MALICIOUSWEBSITE.COM"
+    if args.category:
+        category = str(args.category)
+        data['email']['categories'] = [category]
     return data
 
 # Function to iterate through html files and create a pairing json file with the same name
